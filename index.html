@@ -14,7 +14,7 @@
     --text:#f4f4f7;
     --muted:#cfcfd6;
     --line:rgba(255,255,255,.10);
-    --frame: clamp(340px, 92vw, 440px); /* static square frame tuned for iPhone 16 Pro */
+    --frame: clamp(260px, 80vw, 340px); /* smaller static square frame for iPhone 16 Pro */
   }
   html,body{height:100%}
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -38,23 +38,34 @@
     box-shadow:0 8px 18px rgba(234,74,97,.25); }
   .meta{ color:var(--muted); font-size:12px }
 
-  .stage{ position:relative; display:grid; grid-template-rows: 1fr auto auto; min-height:58vh; background:#121214; overflow:hidden; }
-  .viewer{ position:relative; z-index:1; display:grid; place-items:center; padding:12px; }
-  .frame{ width: var(--frame); height: var(--frame); /* static, square */
+  .stage{ position:relative; display:grid; grid-template-rows: auto 1fr auto auto; min-height:60vh; background:#121214; overflow:hidden; }
+  .title{ z-index:1; text-align:center; font-weight:900; letter-spacing:.2px; padding:10px 10px 0; color:var(--muted) }
+  .title .big{ font-size:18px }
+  .viewer{ position:relative; z-index:1; display:grid; place-items:center; padding:10px; }
+  .frame{ width: var(--frame); height: var(--frame);
     background:#0b0b0d; border-radius:14px; border:1px solid var(--line);
     display:grid; place-items:center;
     box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset; }
   #display{ width:100%; height:100%; object-fit:contain; border-radius:12px; }
 
-  .thumbs{ z-index:1; display:grid; grid-auto-flow:column; grid-auto-columns:80px; gap:8px; overflow-x:auto; padding:8px 10px; border-top:1px solid var(--line); background:#111114 }
-  .thumbs img{ width:100%; height:60px; object-fit:cover; border-radius:10px; border:1px solid var(--line); cursor:pointer; }
-  .slot{ z-index:1; position:relative; display:grid; place-items:center; padding:12px; border-top:1px solid var(--line); background:rgba(255,255,255,.02); }
+  .reaction{ position:absolute; top:8px; right:8px; z-index:2; font-weight:1000; font-size:16px; color:#ffb3c0; opacity:0; transform:translateY(-6px) scale(.96); }
+  .reaction.show{ animation: pop 1100ms ease forwards }
+  @keyframes pop{
+    0%{ opacity:0; transform:translateY(-6px) scale(.96) }
+    20%{ opacity:1; transform:translateY(0) scale(1.06) }
+    60%{ opacity:1; transform:translateY(0) scale(1) }
+    100%{ opacity:0; transform:translateY(-8px) scale(.98) }
+  }
+
+  .thumbs{ z-index:1; display:grid; grid-auto-flow:column; grid-auto-columns:74px; gap:8px; overflow-x:auto; padding:8px 10px; border-top:1px solid var(--line); background:#111114 }
+  .thumbs img{ width:100%; height:56px; object-fit:cover; border-radius:10px; border:1px solid var(--line); cursor:pointer; }
+  .slot{ z-index:1; position:relative; display:grid; place-items:center; padding:10px; border-top:1px solid var(--line); background:rgba(255,255,255,.02); }
   .spin{ appearance:none; border:none; cursor:pointer; font-weight:1000; letter-spacing:.2px; font-size:17px; color:#2b0208; padding:12px 18px; border-radius:999px;
     background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 26px rgba(234,74,97,.35), 0 3px 0 rgba(0,0,0,.25) inset; }
   .spin:active{ transform: translateY(1px) scale(.98) }
 
   /* Hearts from button */
-  .btn-particles{ position:absolute; left:50%; transform:translateX(-50%); bottom:10px; pointer-events:none; }
+  .btn-particles{ position:absolute; left:50%; transform:translateX(-50%); bottom:8px; pointer-events:none; }
   .heartParticle{ position:absolute; left:0; bottom:0; font-size:14px; opacity:0; animation: rise 1.2s ease-out forwards; }
   @keyframes rise{
     0%{ transform: translate(-50%, 0) scale(.7); opacity:0 }
@@ -82,13 +93,13 @@
   /* Intro splash */
   .intro{ position: fixed; inset: 0; z-index: 100; display:grid; place-items:center;
     background: radial-gradient(1400px 900px at 50% -10%, rgba(234,74,97,.18), transparent 60%), linear-gradient(180deg, #0b0b0d, #16161a); }
-  .intro-card{ text-align:center; max-width: 640px; padding: 28px 20px; border-radius: 16px;
+  .intro-card{ text-align:center; max-width: 640px; padding: 24px 18px; border-radius: 16px;
     background: rgba(255,255,255,.02); border:1px solid var(--line); box-shadow: 0 16px 40px rgba(0,0,0,.5); }
-  .intro h1{ margin:0 0 10px; font-size: 26px; letter-spacing:.2px }
-  .intro p{ margin: 10px auto 0; color: var(--muted); font-size: 15px; line-height:1.6; max-width: 520px; }
-  .intro .cta{ margin-top: 14px }
-  .intro .start{ appearance:none; border:none; cursor:pointer; font-weight:1000; letter-spacing:.2px; font-size:16px; color:#2b0208;
-    padding:12px 18px; border-radius:999px; background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 26px rgba(234,74,97,.35), 0 3px 0 rgba(0,0,0,.25) inset; }
+  .intro h1{ margin:0 0 8px; font-size: 24px; letter-spacing:.2px }
+  .intro p{ margin: 8px auto 0; color: var(--muted); font-size: 14px; line-height:1.6; max-width: 520px; }
+  .intro .cta{ margin-top: 12px }
+  .intro .start{ appearance:none; border:none; cursor:pointer; font-weight:1000; letter-spacing:.2px; font-size:15px; color:#2b0208;
+    padding:10px 16px; border-radius:999px; background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 26px rgba(234,74,97,.35), 0 3px 0 rgba(0,0,0,.25) inset; }
   .fade-out{ animation: fadeout .35s ease forwards }
   @keyframes fadeout{ to{ opacity:0; visibility:hidden } }
 </style>
@@ -116,9 +127,11 @@
     </div>
 
     <section class="stage">
+      <div class="title"><span class="big" id="titleText">Wait for it…</span></div>
       <div class="viewer">
         <div class="frame">
           <img id="display" alt="current" />
+          <div class="reaction" id="reaction"></div>
         </div>
         <div class="flash" id="flash"></div>
         <div class="fire" id="fire"></div>
@@ -133,6 +146,7 @@
 
 <script>
 const PHOTOS = ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlelPq1MnQRrudLO_Om5pbh37IRGneS2WcC8pq8ngu5w&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEsFq4_xS7MEP9LSBz0XwYXQtQOe4vLaNJztVirA0_Q&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTK2gRcN39Tbi2SspzsIPSA0l6kAujkCjeBhltBlSLWA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAnWtH7JyrABt492qToLsDyAqYWMCQiCPSpDwmBDtfLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWsRYDhJlDmP3L-niG8n52AgLfwS1BZWJ5JMbl4yUpBg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hh_LiZwvT8ujeKffuX4g0N23v4qyRYU9Hbc0gvH-tg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7QYw6vPc2sdSYAL5a9POmfYxlaACIxnkSM6y9WKmt0g&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBDPRgL1YfBSWFJSR9o8J0UU8i6EgKueMQI1ugbzw1Ag&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAKANGe5Oyfo3Y8L3klKG6PVBAVTGC6hOzVhTEWLJcUQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ-666QIo6VkbJFFxPv_ZgT103wGk3bx5YyCY-vmoNpA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnrnaGo7Lbi9dJufeZsWiGlRCfRyCWnD3crkR4pdT_Aw&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzEa0302dL1rk48nKzds9XpSQPNaYLhFJbxLvep9FLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiY6eUFo7uTWRD7OpXNZTw2-r_mgK9OGxwHGngykgpDQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSf41wuNGeORcuOJ4bGR3vNx3002HuGd4GOCsYzrozw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcHdTTNYIQrrmnGBG-6_aj_rFYSvN4MeZ9AZkHx6Ghtg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOadkdb31_at6swnlVpCvl-c11SoUpyj9OsZBroEV1dw&s=10'];
+const FUNNY = ["Hot!", "Ohhh no!", "Fansextic!", "Exotic!", "Spicy!", "Saucy!", "Cheeky!", "Steamy!", "Wild!", "Yummy!"];
 
 const display = document.getElementById('display');
 const thumbs = document.getElementById('thumbs');
@@ -143,12 +157,14 @@ const fireLayer = document.getElementById('fire');
 const btnParticles = document.getElementById('btnParticles');
 const intro = document.getElementById('intro');
 const startBtn = document.getElementById('startBtn');
+const titleText = document.getElementById('titleText');
+const reaction = document.getElementById('reaction');
 
 let current = -1;
 let spinning = false;
 let heartInterval = null;
 
-// Audio (minimal, mobile-friendly)
+// Audio (mobile-friendly)
 let actx = null;
 function ensureAudio(){
   if (!actx){
@@ -245,13 +261,14 @@ function fireBlast(){
   }
 }
 
-// Spin logic: ~5s total, random subset of frames
+// Spin: ~5s, random subset frames, title update + reaction word
 function spin(){
   if (spinning) return;
   spinning = true;
   clickSound();
   spinBtn.disabled = true;
   emitHeartsStart();
+  titleText.textContent = "Wait for it…";
 
   const total = PHOTOS.length;
   if (!total){ spinning = false; spinBtn.disabled = false; emitHeartsStop(); return; }
@@ -259,7 +276,6 @@ function spin(){
   let target = Math.floor(Math.random()*total);
   if (total > 1 && target === current) target = (target + 1) % total;
 
-  // Show only a subset of frames while spinning
   const SUBSET_STEPS = 12 + Math.floor(Math.random()*6); // 12-17 frames
   const sequence = [];
   let last = current;
@@ -268,9 +284,8 @@ function spin(){
     do { i = Math.floor(Math.random()*total); } while(total>1 && i===last);
     sequence.push(i); last = i;
   }
-  sequence.push(target); // ensure final frame is the target
+  sequence.push(target);
 
-  // Build eased delays summing to 5000ms
   const TARGET = 5000;
   const minInterval = 60, maxInterval = 420;
   function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
@@ -300,6 +315,13 @@ function spin(){
       winSound();
       fireBlast();
       emitHeartsStop();
+      // Show random funny word
+      const word = FUNNY[Math.floor(Math.random()*FUNNY.length)];
+      reaction.textContent = word;
+      reaction.classList.remove('show');
+      void reaction.offsetWidth;
+      reaction.classList.add('show');
+      titleText.textContent = word;
       spinning = false;
       spinBtn.disabled = false;
     }

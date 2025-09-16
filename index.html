@@ -148,13 +148,11 @@
 
 <script>
 // ====== DATA ======
-const PHOTOS = ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlelPq1MnQRrudLO_Om5pbh37IRGneS2WcC8pq8ngu5w&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEsFq4_xS7MEP9LSBz0XwYXQtQOe4vLaNJztVirA0_Q&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTK2gRcN39Tbi2SspzsIPSA0l6kAujkCjeBhltBlSLWA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAnWtH7JyrABt492qToLsDyAqYWMCQiCPSpDwmBDtfLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWsRYDhJlDmP3L-niG8n52AgLfwS1BZWJ5JMbl4yUpBg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hh_LiZwvT8ujeKffuX4g0N23v4qyRYU9Hbc0gvH-tg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7QYw6vPc2sdSYAL5a9POmfYxlaACIxnkSM6y9WKmt0g&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBDPRgL1YfBSWFJSR9o8J0UU8i6EgKueMQI1ugbzw1Ag&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAKANGe5Oyfo3Y8L3klKG6PVBAVTGC6hOzVhTEWLJcUQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ-666QIo6VkbJFFxPv_ZgT103wGk3bx5YyCY-vmoNpA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnrnaGo7Lbi9dJufeZsWiGlRCfRyCWnD3crkR4pdT_Aw&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzEa0302dL1rk48nKzds9XpSQPNaYLhFJbxLvep9FLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiY6eUFo7uTWRD7OpXNZTw2-r_mgK9OGxwHGngykgpDQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSf41wuNGeORcuOJ4bGR3vNx3002HuGd4GOCsYzrozw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcHdTTNYIQrrmnGBG-6_aj_rFYSvN4MeZ9AZkHx6Ghtg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOadkdb31_at6swnlVpCvl-c11SoUpyj9OsZBroEV1dw&s=10'];
+const PHOTOS = [];
 const FUNNY = ["Hot!", "Ohhh no!", "Fansextic!", "Exotic!", "Spicy!", "Saucy!", "Cheeky!", "Steamy!", "Wild!", "Yummy!"];
 
-// ====== BGM CONFIG ======
-// Supply a legal MP3/OGG URL of your 00:15–00:50 clip OR the full song.
-// We'll loop only the 15–50s window either way.
-const BGM_URL = ""; // e.g., "https://your-domain.com/audio/i-see-red-clip.mp3"
+// ====== BGM CONFIG (royalty‑free) ======
+const BGM_URL = "https://cdn.pixabay.com/download/audio/2023/04/03/audio_c6dbf3b7f2.mp3?filename=indie-rock-energetic-141886.mp3"; // royalty‑free indie rock loop
 const BGM_START = 15;   // seconds
 const BGM_END   = 50;   // seconds
 const BGM_VOL   = 0.10; // 10%
@@ -189,7 +187,6 @@ function setupBgm(){
   });
   bgm.addEventListener('timeupdate', ()=>{
     if (bgm.currentTime >= BGM_END){
-      // Jump back to start of segment
       bgm.currentTime = BGM_START + 0.01;
       bgm.play().catch(()=>{});
     }
@@ -206,7 +203,7 @@ function toggleMute(){
   musicMuted = !musicMuted;
   bgm.muted = musicMuted;
   muteBtn.setAttribute('aria-pressed', String(musicMuted));
-  muteBtn.classList.toggle('active', !musicMuted ? false : true);
+  muteBtn.classList.toggle('active', musicMuted);
   muteBtn.textContent = musicMuted ? "🔇 Music" : "🔊 Music";
 }
 
@@ -376,17 +373,39 @@ function spin(){
 }
 
 // Init
+const PHOTOS_DATA = [
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlelPq1MnQRrudLO_Om5pbh37IRGneS2WcC8pq8ngu5w&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEsFq4_xS7MEP9LSBz0XwYXQtQOe4vLaNJztVirA0_Q&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTK2gRcN39Tbi2SspzsIPSA0l6kAujkCjeBhltBlSLWA&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAnWtH7JyrABt492qToLsDyAqYWMCQiCPSpDwmBDtfLw&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWsRYDhJlDmP3L-niG8n52AgLfwS1BZWJ5JMbl4yUpBg&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hh_LiZwvT8ujeKffuX4g0N23v4qyRYU9Hbc0gvH-tg&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7QYw6vPc2sdSYAL5a9POmfYxlaACIxnkSM6y9WKmt0g&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBDPRgL1YfBSWFJSR9o8J0UU8i6EgKueMQI1ugbzw1Ag&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAKANGe5Oyfo3Y8L3klKG6PVBAVTGC6hOzVhTEWLJcUQ&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ-666QIo6VkbJFFxPv_ZgT103wGk3bx5YyCY-vmoNpA&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnrnaGo7Lbi9dJufeZsWiGlRCfRyCWnD3crkR4pdT_Aw&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzEa0302dL1rk48nKzds9XpSQPNaYLhFJbxLvep9FLw&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiY6eUFo7uTWRD7OpXNZTw2-r_mgK9OGxwHGngykgpDQ&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSf41wuNGeORcuOJ4bGR3vNx3002HuGd4GOCsYzrozw&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcHdTTNYIQrrmnGBG-6_aj_rFYSvN4MeZ9AZkHx6Ghtg&s=10",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOadkdb31_at6swnlVpCvl-c11SoUpyj9OsZBroEV1dw&s=10",
+];
+
 function init(){
-  countEl.textContent = PHOTOS.length;
-  PHOTOS.forEach((src, i)=>{
+  const photos = PHOTOS.length ? PHOTOS : PHOTOS_DATA;
+  countEl.textContent = photos.length;
+  photos.forEach((src, i)=>{
     const t = new Image();
     t.src = src; t.alt = 'photo '+(i+1);
-    t.addEventListener('click', ()=> { if (!spinning) show(i, true); });
+    t.addEventListener('click', ()=> { if (!spinning) { display.src = src; } });
     thumbs.appendChild(t);
   });
-  show(0, false);
+  document.body.dataset.photosLoaded = "1";
+  if (photos.length) { display.src = photos[0]; }
   setupBgm();
 }
+document.addEventListener('DOMContentLoaded', init);
 spinBtn.addEventListener('click', ()=>{ ensureAudioCtx(); spin(); });
 startBtn.addEventListener('click', ()=>{
   ensureAudioCtx();

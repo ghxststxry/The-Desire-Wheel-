@@ -8,12 +8,12 @@
 <style>
   :root{
     --bg:#0f0f12;
-    --panel:#151518;
-    --accent:#e8455b;
+    --panel:#141417;
+    --accent:#ea4a61;
     --accent-2:#ff9dad;
-    --text:#f7f7f9;
-    --muted:#d9d9e0;
-    --line:rgba(255,255,255,.12);
+    --text:#f4f4f7;
+    --muted:#cfcfd6;
+    --line:rgba(255,255,255,.10);
   }
   html,body{height:100%}
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -21,41 +21,71 @@
     margin:0; color:var(--text);
     font-family: ui-rounded, system-ui, -apple-system, "SF Pro Rounded", "Nunito", "Segoe UI", Roboto, Arial, sans-serif;
     min-height:100dvh;
-    background: radial-gradient(1200px 800px at 50% -10%, rgba(232,69,91,.12), transparent 60%),
-               linear-gradient(180deg, #0b0b0d 0%, var(--bg) 100%);
+    background: linear-gradient(180deg, #0b0b0d, var(--bg));
     padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
              max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     display:grid; place-items:center;
   }
-  .shell{ width:min(900px,100%); background:linear-gradient(180deg, var(--panel), #131316);
-    border-radius:22px; overflow:hidden; position:relative; box-shadow:0 20px 50px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset; }
+
+  .shell{ width:min(900px,100%); background:linear-gradient(180deg, var(--panel), #111113);
+    border-radius:20px; overflow:hidden; position:relative; box-shadow:0 20px 50px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset; }
   header{ display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:12px 14px; border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(232,69,91,.15), rgba(232,69,91,.06), transparent); }
+    padding:12px 14px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.02); }
   .brand{ display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px; font-size:17px }
-  .heart-logo{ width:26px; height:26px; display:grid; place-items:center; border-radius:10px;
+  .heart-logo{ width:24px; height:24px; display:grid; place-items:center; border-radius:8px;
     background:radial-gradient(90% 90% at 50% 30%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%);
-    box-shadow:0 8px 18px rgba(232,69,91,.35); }
+    box-shadow:0 8px 18px rgba(234,74,97,.25); }
   .meta{ color:var(--muted); font-size:12px }
 
-  .stage{ position:relative; display:grid; grid-template-rows: 1fr auto auto; min-height:58vh; background:linear-gradient(180deg, #121214, #16161a); overflow:hidden; }
-  .fx{ position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0 }
-  .heart{ position:absolute; width:14px; height:14px; opacity:0; animation: float 7s linear infinite }
-  @keyframes float{ 0%{opacity:0; transform: translateY(8px) scale(.7) rotate(0)} 10%{opacity:.85} 60%{opacity:.85} 100%{opacity:0; transform: translateY(-110vh) scale(1.15) rotate(18deg)} }
-
+  .stage{ position:relative; display:grid; grid-template-rows: 1fr auto auto; min-height:58vh; background:#121214; overflow:hidden; }
   .viewer{ position:relative; z-index:1; display:grid; place-items:center; padding:12px; }
-  #display{ max-width:94%; max-height:58vh; border-radius:16px; object-fit:contain; box-shadow: 0 14px 34px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset; }
-  .thumbs{ z-index:1; display:grid; grid-auto-flow:column; grid-auto-columns:88px; gap:8px; overflow-x:auto; padding:8px 10px; border-top:1px solid var(--line); background:#121215 }
-  .thumbs img{ width:100%; height:62px; object-fit:cover; border-radius:12px; border:1px solid var(--line); cursor:pointer; }
-  .slot{ z-index:1; display:grid; place-items:center; padding:12px; border-top:1px solid var(--line); background: linear-gradient(180deg, rgba(232,69,91,.12), transparent); }
-  .spin{ appearance:none; border:none; cursor:pointer; font-weight:1000; letter-spacing:.3px; font-size:18px; color:#2b0208; padding:13px 20px; border-radius:999px;
-    background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 30px rgba(232,69,91,.45), 0 3px 0 rgba(0,0,0,.25) inset; }
+  #display{ max-width:94%; max-height:58vh; border-radius:14px; object-fit:contain;
+    box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset; }
+  .thumbs{ z-index:1; display:grid; grid-auto-flow:column; grid-auto-columns:80px; gap:8px; overflow-x:auto; padding:8px 10px; border-top:1px solid var(--line); background:#111114 }
+  .thumbs img{ width:100%; height:60px; object-fit:cover; border-radius:10px; border:1px solid var(--line); cursor:pointer; }
+  .slot{ z-index:1; position:relative; display:grid; place-items:center; padding:12px; border-top:1px solid var(--line); background:rgba(255,255,255,.02); }
+  .spin{ appearance:none; border:none; cursor:pointer; font-weight:1000; letter-spacing:.2px; font-size:17px; color:#2b0208; padding:12px 18px; border-radius:999px;
+    background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 26px rgba(234,74,97,.35), 0 3px 0 rgba(0,0,0,.25) inset; }
   .spin:active{ transform: translateY(1px) scale(.98) }
 
-  .flash{ position:absolute; inset:0; z-index:2; pointer-events:none; background: radial-gradient(600px 400px at 50% 50%, rgba(255,255,255,.4), transparent 60%); opacity:0; transition: opacity .28s ease; }
+  /* Hearts from button */
+  .btn-particles{ position:absolute; left:50%; transform:translateX(-50%); bottom:10px; pointer-events:none; }
+  .heartParticle{ position:absolute; left:0; bottom:0; font-size:14px; opacity:0; animation: rise 1.2s ease-out forwards; }
+  @keyframes rise{
+    0%{ transform: translate(-50%, 0) scale(.7); opacity:0 }
+    10%{ opacity:1 }
+    100%{ transform: translate(calc(-50% + var(--dx)), -110px) scale(1.15); opacity:0 }
+  }
+
+  /* Flash on stop */
+  .flash{ position:absolute; inset:0; z-index:2; pointer-events:none; background: radial-gradient(600px 400px at 50% 50%, rgba(255,255,255,.45), transparent 60%); opacity:0; transition: opacity .28s ease; }
   .flash.show{ opacity:1 }
-  .reveal{ animation: reveal .55s cubic-bezier(.2,.8,.1,1) }
-  @keyframes reveal{ 0%{ transform: scale(.96); filter: blur(8px) brightness(.9); opacity:0 } 100%{ transform: scale(1); filter:none; opacity:1 } }
+
+  /* Fire confetti */
+  .fire{ position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:3; overflow:hidden; }
+  .ember{ position:absolute; font-size:18px; animation: blaze 900ms ease-out forwards; }
+  @keyframes blaze{
+    0%{ transform: translate(var(--x), var(--y)) scale(.8) rotate(0deg); opacity:0 }
+    10%{ opacity:1 }
+    100%{ transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) - 160px)) scale(1.2) rotate(15deg); opacity:0 }
+  }
+
+  /* Reveal cue */
+  .reveal{ animation: reveal .5s cubic-bezier(.2,.8,.1,1) }
+  @keyframes reveal{ 0%{ transform: scale(.98); filter: blur(6px) brightness(.95); opacity:0 } 100%{ transform: scale(1); filter:none; opacity:1 } }
+
+  /* Intro splash */
+  .intro{ position: fixed; inset: 0; z-index: 100; display:grid; place-items:center;
+    background: radial-gradient(1400px 900px at 50% -10%, rgba(234,74,97,.18), transparent 60%), linear-gradient(180deg, #0b0b0d, #16161a); }
+  .intro-card{ text-align:center; max-width: 640px; padding: 28px 20px; border-radius: 16px;
+    background: rgba(255,255,255,.02); border:1px solid var(--line); box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+  .intro h1{ margin:0 0 10px; font-size: 26px; letter-spacing:.2px }
+  .intro p{ margin: 10px auto 0; color: var(--muted); font-size: 15px; line-height:1.6; max-width: 520px; }
+  .intro .cta{ margin-top: 14px }
+  .intro .start{ appearance:none; border:none; cursor:pointer; font-weight:1000; letter-spacing:.2px; font-size:16px; color:#2b0208;
+    padding:12px 18px; border-radius:999px; background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 26px rgba(234,74,97,.35), 0 3px 0 rgba(0,0,0,.25) inset; }
+  .fade-out{ animation: fadeout .35s ease forwards }
+  @keyframes fadeout{ to{ opacity:0; visibility:hidden } }
 </style>
 </head>
 <body>
@@ -65,13 +95,31 @@
       <div class="meta"><span id="count">0</span> photos • tap SPIN</div>
     </header>
 
+    <!-- Intro splash -->
+    <div class="intro" id="intro">
+      <div class="intro-card">
+        <h1>The Desire Wheel 🔥</h1>
+        <p>
+          A hot, funny gamble with ideas-as-photos. Spin to reveal the next spark.
+          Remember: sometimes <em>one's position in society</em> makes all the difference —
+          but here, the wheel treats every idea like royalty. 😉
+        </p>
+        <div class="cta">
+          <button class="start" id="startBtn">Begin</button>
+        </div>
+      </div>
+    </div>
+
     <section class="stage">
-      <div class="fx" id="fx"></div>
       <div class="viewer">
         <img id="display" alt="current" />
         <div class="flash" id="flash"></div>
+        <div class="fire" id="fire"></div>
       </div>
-      <div class="slot"><button id="spinBtn" class="spin">❤️ SPIN</button></div>
+      <div class="slot">
+        <button id="spinBtn" class="spin">❤️ SPIN</button>
+        <div class="btn-particles" id="btnParticles"></div>
+      </div>
       <div id="thumbs" class="thumbs" aria-label="All photos"></div>
     </section>
   </div>
@@ -83,33 +131,17 @@ const display = document.getElementById('display');
 const thumbs = document.getElementById('thumbs');
 const spinBtn = document.getElementById('spinBtn');
 const countEl = document.getElementById('count');
-const fxLayer = document.getElementById('fx');
 const flashEl = document.getElementById('flash');
+const fireLayer = document.getElementById('fire');
+const btnParticles = document.getElementById('btnParticles');
+const intro = document.getElementById('intro');
+const startBtn = document.getElementById('startBtn');
 
 let current = -1;
 let spinning = false;
+let heartInterval = null;
 
-// Hearts background
-function spawnHeart(burst=false){
-  const span = document.createElement('span');
-  span.className = 'heart';
-  const size = 12 + Math.random()*16;
-  const left = burst ? (40 + Math.random()*20) : (Math.random()*100);
-  const delay = Math.random()*4;
-  span.style.width = size+'px';
-  span.style.height = size+'px';
-  span.style.left = left+'%';
-  span.style.bottom = burst ? '0px' : '-18px';
-  span.style.animationDelay = delay+'s';
-  const hue = 350 + Math.random()*20;
-  const light = 70 + Math.random()*8;
-  span.innerHTML = `<svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg"><path fill="hsl(${hue} 100% ${light}% / 1)" d="M12 21s-1-.55-2.6-1.67C5.1 16.7 1 13.8 1 9.5 1 6.46 3.46 4 6.5 4 8.24 4 9.82 4.8 11 6.06 12.18 4.8 13.76 4 15.5 4 18.54 4 21 6.46 21 9.5c0 4.3-4.1 7.2-8.4 9.83C13 20.45 12 21 12 21z"/></svg>`;
-  fxLayer.appendChild(span);
-  setTimeout(()=>span.remove(), 8000);
-}
-setInterval(()=>{ if (document.hasFocus()) spawnHeart(false); }, 1000);
-
-// Audio
+// Audio (minimal, mobile-friendly)
 let actx = null;
 function ensureAudio(){
   if (!actx){
@@ -169,48 +201,96 @@ function show(i, animate){
   }
 }
 
-// Spin logic
+// Hearts from button
+function emitHeartsStart(){
+  if (heartInterval) return;
+  heartInterval = setInterval(()=>{
+    const span = document.createElement('span');
+    span.className = 'heartParticle';
+    span.textContent = '💖';
+    const dx = (Math.random()*120 - 60) + 'px';
+    span.style.setProperty('--dx', dx);
+    span.style.left = (Math.random()*40 - 20) + 'px';
+    btnParticles.appendChild(span);
+    setTimeout(()=> span.remove(), 1300);
+  }, 100);
+}
+function emitHeartsStop(){
+  if (heartInterval){ clearInterval(heartInterval); heartInterval = null; }
+}
+
+// Fire confetti
+function fireBlast(){
+  fireLayer.innerHTML = '';
+  const N = 36;
+  const rect = display.getBoundingClientRect();
+  for(let i=0;i<N;i++){
+    const ember = document.createElement('span');
+    ember.className = 'ember';
+    ember.textContent = '🔥';
+    const x = (Math.random()*100) + '%';
+    const y = (40 + Math.random()*30) + '%';
+    const dx = (Math.random()*200 - 100) + 'px';
+    ember.style.setProperty('--x', x);
+    ember.style.setProperty('--y', y);
+    ember.style.setProperty('--dx', dx);
+    fireLayer.appendChild(ember);
+    setTimeout(()=>ember.remove(), 1000);
+  }
+}
+
+// Spin logic with precise ~5s duration
 function spin(){
   if (spinning) return;
   spinning = true;
   clickSound();
   spinBtn.disabled = true;
+  emitHeartsStart();
 
   const total = PHOTOS.length;
-  if (!total){ spinning = false; spinBtn.disabled = false; return; }
+  if (!total){ spinning = false; spinBtn.disabled = false; emitHeartsStop(); return; }
 
   let target = Math.floor(Math.random()*total);
   if (total > 1 && target === current) target = (target + 1) % total;
 
-  const revolutions = 3 + Math.floor(Math.random()*3);
+  const revolutions = 4; // base loops
   const offset = ((target - current - 1 + total) % total) + 1;
   const steps = revolutions*total + offset;
 
-  let k = 0;
-  const minInterval = 40, maxInterval = 260;
+  // Build delays that sum to TARGET ms
+  const TARGET = 5000; // 5 seconds
+  const minInterval = 35, maxInterval = 260;
   function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+  const delays = [];
+  for(let k=1;k<=steps;k++){
+    const t = k/steps;
+    delays.push(minInterval + (maxInterval - minInterval)*easeOut(t));
+  }
+  const sum = delays.reduce((a,b)=>a+b,0);
+  const scale = TARGET / sum;
+  for(let i=0;i<delays.length;i++) delays[i] *= scale;
 
-  function tick(){
+  let k = 0;
+  function advance(){
     const i = (current + 1) % total;
     show(i, false);
     tickSound();
-    k++;
-    const progress = Math.min(1, k/steps);
-    const delay = minInterval + (maxInterval - minInterval)*easeOut(progress);
-    if (k < steps){
-      setTimeout(tick, delay);
+    if (k < steps-1){
+      setTimeout(advance, delays[k++]);
     } else {
+      // Land
       show(target, true);
       if (navigator.vibrate) navigator.vibrate([10, 60, 10]);
       flashEl.classList.add('show');
       setTimeout(()=>flashEl.classList.remove('show'), 180);
       winSound();
-      for(let j=0;j<8;j++) setTimeout(()=>spawnHeart(true), j*60);
+      fireBlast();
+      emitHeartsStop();
       spinning = false;
       spinBtn.disabled = false;
     }
   }
-  tick();
+  setTimeout(advance, delays[k++]);
 }
 
 // Init
@@ -225,6 +305,11 @@ function init(){
   show(0, false);
 }
 spinBtn.addEventListener('click', ()=>{ ensureAudio(); spin(); });
+startBtn.addEventListener('click', ()=>{
+  ensureAudio();
+  intro.classList.add('fade-out');
+  setTimeout(()=>{ intro.style.display='none'; }, 360);
+});
 init();
 </script>
 </body>

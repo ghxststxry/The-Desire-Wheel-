@@ -142,19 +142,24 @@
       <div id="thumbs" class="thumbs" aria-label="All photos"></div>
     </section>
 
-    <!-- Background music (provide your own legal MP3/OGG URL) -->
+    <!-- Background music -->
     <audio id="bgm" preload="auto" loop></audio>
   </div>
 
 <script>
+// ====== DATA ======
 const PHOTOS = ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlelPq1MnQRrudLO_Om5pbh37IRGneS2WcC8pq8ngu5w&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEsFq4_xS7MEP9LSBz0XwYXQtQOe4vLaNJztVirA0_Q&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTK2gRcN39Tbi2SspzsIPSA0l6kAujkCjeBhltBlSLWA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAnWtH7JyrABt492qToLsDyAqYWMCQiCPSpDwmBDtfLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWsRYDhJlDmP3L-niG8n52AgLfwS1BZWJ5JMbl4yUpBg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hh_LiZwvT8ujeKffuX4g0N23v4qyRYU9Hbc0gvH-tg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7QYw6vPc2sdSYAL5a9POmfYxlaACIxnkSM6y9WKmt0g&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBDPRgL1YfBSWFJSR9o8J0UU8i6EgKueMQI1ugbzw1Ag&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAKANGe5Oyfo3Y8L3klKG6PVBAVTGC6hOzVhTEWLJcUQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ-666QIo6VkbJFFxPv_ZgT103wGk3bx5YyCY-vmoNpA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnrnaGo7Lbi9dJufeZsWiGlRCfRyCWnD3crkR4pdT_Aw&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzEa0302dL1rk48nKzds9XpSQPNaYLhFJbxLvep9FLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiY6eUFo7uTWRD7OpXNZTw2-r_mgK9OGxwHGngykgpDQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSf41wuNGeORcuOJ4bGR3vNx3002HuGd4GOCsYzrozw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcHdTTNYIQrrmnGBG-6_aj_rFYSvN4MeZ9AZkHx6Ghtg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOadkdb31_at6swnlVpCvl-c11SoUpyj9OsZBroEV1dw&s=10'];
 const FUNNY = ["Hot!", "Ohhh no!", "Fansextic!", "Exotic!", "Spicy!", "Saucy!", "Cheeky!", "Steamy!", "Wild!", "Yummy!"];
 
 // ====== BGM CONFIG ======
-// Replace with a legally hosted MP3/OGG URL of the track you own rights to.
-const BGM_URL = ""; // e.g., "https://your.cdn.com/i-see-red.mp3"
-const BGM_START_VOLUME = 0.10; // 10%
+// Supply a legal MP3/OGG URL of your 00:15–00:50 clip OR the full song.
+// We'll loop only the 15–50s window either way.
+const BGM_URL = ""; // e.g., "https://your-domain.com/audio/i-see-red-clip.mp3"
+const BGM_START = 15;   // seconds
+const BGM_END   = 50;   // seconds
+const BGM_VOL   = 0.10; // 10%
 
+// ====== ELEMENTS ======
 const display = document.getElementById('display');
 const thumbs = document.getElementById('thumbs');
 const spinBtn = document.getElementById('spinBtn');
@@ -172,32 +177,40 @@ const bgm = document.getElementById('bgm');
 let current = -1;
 let spinning = false;
 let heartInterval = null;
-let musicReady = false;
-let musicMuted = false;
 
-// Setup BGM
+// ====== BGM helpers ======
 function setupBgm(){
   if (!BGM_URL) return;
   if (!bgm.src){ bgm.src = BGM_URL; }
-  bgm.volume = BGM_START_VOLUME;
-  musicReady = true;
+  bgm.volume = BGM_VOL;
+  bgm.loop = false; // we'll loop the segment manually
+  bgm.addEventListener('loadedmetadata', ()=>{
+    try { bgm.currentTime = Math.min(BGM_START, (bgm.duration||BGM_START)-0.1); } catch(e){}
+  });
+  bgm.addEventListener('timeupdate', ()=>{
+    if (bgm.currentTime >= BGM_END){
+      // Jump back to start of segment
+      bgm.currentTime = BGM_START + 0.01;
+      bgm.play().catch(()=>{});
+    }
+  });
 }
 function playBgm(){
   if (!BGM_URL) return;
   setupBgm();
-  // iOS requires user gesture; this is always called on a button click
   bgm.play().catch(()=>{});
 }
+let musicMuted = false;
 function toggleMute(){
   if (!BGM_URL) return;
   musicMuted = !musicMuted;
   bgm.muted = musicMuted;
-  muteBtn.setAttribute('aria-pressed', String(!musicMuted ? false : true));
-  muteBtn.classList.toggle('active', !musicMuted);
+  muteBtn.setAttribute('aria-pressed', String(musicMuted));
+  muteBtn.classList.toggle('active', !musicMuted ? false : true);
   muteBtn.textContent = musicMuted ? "🔇 Music" : "🔊 Music";
 }
 
-// Audio FX (mobile-friendly) for UI
+// ====== FX audio (bleeps) ======
 let actx = null;
 function ensureAudioCtx(){
   if (!actx){
@@ -246,7 +259,7 @@ function winSound(){
   o1.stop(t+0.36); o2.stop(t+0.36);
 }
 
-// UI
+// ====== UI helpers ======
 function show(i, animate){
   current = i;
   display.src = PHOTOS[i];
@@ -349,8 +362,7 @@ function spin(){
       winSound();
       fireBlast();
       emitHeartsStop();
-      // reaction word
-      const word = FUNNY[Math.floor(Math.random()*FUNNY.length)];
+      const word = ["Hot!", "Ohhh no!", "Fansextic!", "Exotic!", "Spicy!", "Saucy!", "Cheeky!", "Steamy!", "Wild!", "Yummy!"][Math.floor(Math.random()*10)];
       reaction.textContent = word;
       reaction.classList.remove('show');
       void reaction.offsetWidth;
@@ -378,12 +390,11 @@ function init(){
 spinBtn.addEventListener('click', ()=>{ ensureAudioCtx(); spin(); });
 startBtn.addEventListener('click', ()=>{
   ensureAudioCtx();
-  playBgm(); // start on Begin as well
+  playBgm();
   intro.classList.add('fade-out');
   setTimeout(()=>{ intro.style.display='none'; }, 360);
 });
 muteBtn.addEventListener('click', toggleMute);
-init();
 </script>
 </body>
 </html>

@@ -14,7 +14,7 @@
     --text:#f4f4f7;
     --muted:#cfcfd6;
     --line:rgba(255,255,255,.10);
-    --frame: clamp(260px, 80vw, 340px);
+    --frame: clamp(260px, 80vw, 340px); /* smaller static square frame for iPhone 16 Pro */
   }
   html,body{height:100%}
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -37,9 +37,6 @@
     background:radial-gradient(90% 90% at 50% 30%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%);
     box-shadow:0 8px 18px rgba(234,74,97,.25); }
   .meta{ color:var(--muted); font-size:12px }
-  .muter{ appearance:none; border:1px solid var(--line); background:transparent; color:var(--muted);
-    border-radius:999px; padding:6px 10px; font-weight:800; cursor:pointer; }
-  .muter.active{ color:var(--text); border-color: rgba(255,255,255,.22) }
 
   .stage{ position:relative; display:grid; grid-template-rows: auto 1fr auto auto; min-height:60vh; background:#121214; overflow:hidden; }
   .title{ z-index:1; text-align:center; font-weight:900; letter-spacing:.2px; padding:10px 10px 0; color:var(--muted) }
@@ -67,6 +64,7 @@
     background: radial-gradient(120% 140% at 50% 20%, var(--accent-2) 0%, var(--accent) 60%, #b0142c 100%); box-shadow: 0 12px 26px rgba(234,74,97,.35), 0 3px 0 rgba(0,0,0,.25) inset; }
   .spin:active{ transform: translateY(1px) scale(.98) }
 
+  /* Hearts from button */
   .btn-particles{ position:absolute; left:50%; transform:translateX(-50%); bottom:8px; pointer-events:none; }
   .heartParticle{ position:absolute; left:0; bottom:0; font-size:14px; opacity:0; animation: rise 1.2s ease-out forwards; }
   @keyframes rise{
@@ -75,9 +73,11 @@
     100%{ transform: translate(calc(-50% + var(--dx)), -110px) scale(1.15); opacity:0 }
   }
 
+  /* Flash on stop */
   .flash{ position:absolute; inset:0; z-index:2; pointer-events:none; background: radial-gradient(600px 400px at 50% 50%, rgba(255,255,255,.45), transparent 60%); opacity:0; transition: opacity .28s ease; }
   .flash.show{ opacity:1 }
 
+  /* Fire confetti */
   .fire{ position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:3; overflow:hidden; }
   .ember{ position:absolute; font-size:18px; animation: blaze 900ms ease-out forwards; }
   @keyframes blaze{
@@ -86,9 +86,11 @@
     100%{ transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) - 160px)) scale(1.2) rotate(15deg); opacity:0 }
   }
 
+  /* Reveal cue */
   .reveal{ animation: reveal .5s cubic-bezier(.2,.8,.1,1) }
   @keyframes reveal{ 0%{ transform: scale(.98); filter: blur(6px) brightness(.95); opacity:0 } 100%{ transform: scale(1); filter:none; opacity:1 } }
 
+  /* Intro splash */
   .intro{ position: fixed; inset: 0; z-index: 100; display:grid; place-items:center;
     background: radial-gradient(1400px 900px at 50% -10%, rgba(234,74,97,.18), transparent 60%), linear-gradient(180deg, #0b0b0d, #16161a); }
   .intro-card{ text-align:center; max-width: 640px; padding: 24px 18px; border-radius: 16px;
@@ -107,7 +109,6 @@
     <header>
       <div class="brand"><span class="heart-logo">💖</span><span>The Desire Wheel 🔥</span></div>
       <div class="meta"><span id="count">0</span> photos • tap SPIN</div>
-      <button id="muteBtn" class="muter" aria-pressed="false" title="Toggle music">🔊 Music</button>
     </header>
 
     <!-- Intro splash -->
@@ -141,23 +142,12 @@
       </div>
       <div id="thumbs" class="thumbs" aria-label="All photos"></div>
     </section>
-
-    <!-- Background music -->
-    <audio id="bgm" preload="auto" loop></audio>
   </div>
 
 <script>
-// ====== DATA ======
-const PHOTOS = [];
+const PHOTOS = ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlelPq1MnQRrudLO_Om5pbh37IRGneS2WcC8pq8ngu5w&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEsFq4_xS7MEP9LSBz0XwYXQtQOe4vLaNJztVirA0_Q&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTK2gRcN39Tbi2SspzsIPSA0l6kAujkCjeBhltBlSLWA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAnWtH7JyrABt492qToLsDyAqYWMCQiCPSpDwmBDtfLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWsRYDhJlDmP3L-niG8n52AgLfwS1BZWJ5JMbl4yUpBg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hh_LiZwvT8ujeKffuX4g0N23v4qyRYU9Hbc0gvH-tg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7QYw6vPc2sdSYAL5a9POmfYxlaACIxnkSM6y9WKmt0g&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBDPRgL1YfBSWFJSR9o8J0UU8i6EgKueMQI1ugbzw1Ag&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAKANGe5Oyfo3Y8L3klKG6PVBAVTGC6hOzVhTEWLJcUQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ-666QIo6VkbJFFxPv_ZgT103wGk3bx5YyCY-vmoNpA&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnrnaGo7Lbi9dJufeZsWiGlRCfRyCWnD3crkR4pdT_Aw&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzEa0302dL1rk48nKzds9XpSQPNaYLhFJbxLvep9FLw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiY6eUFo7uTWRD7OpXNZTw2-r_mgK9OGxwHGngykgpDQ&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSf41wuNGeORcuOJ4bGR3vNx3002HuGd4GOCsYzrozw&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcHdTTNYIQrrmnGBG-6_aj_rFYSvN4MeZ9AZkHx6Ghtg&s=10', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOadkdb31_at6swnlVpCvl-c11SoUpyj9OsZBroEV1dw&s=10'];
 const FUNNY = ["Hot!", "Ohhh no!", "Fansextic!", "Exotic!", "Spicy!", "Saucy!", "Cheeky!", "Steamy!", "Wild!", "Yummy!"];
 
-// ====== BGM CONFIG (royalty‑free) ======
-const BGM_URL = "https://cdn.pixabay.com/download/audio/2023/04/03/audio_c6dbf3b7f2.mp3?filename=indie-rock-energetic-141886.mp3"; // royalty‑free indie rock loop
-const BGM_START = 15;   // seconds
-const BGM_END   = 50;   // seconds
-const BGM_VOL   = 0.10; // 10%
-
-// ====== ELEMENTS ======
 const display = document.getElementById('display');
 const thumbs = document.getElementById('thumbs');
 const spinBtn = document.getElementById('spinBtn');
@@ -169,47 +159,14 @@ const intro = document.getElementById('intro');
 const startBtn = document.getElementById('startBtn');
 const titleText = document.getElementById('titleText');
 const reaction = document.getElementById('reaction');
-const muteBtn = document.getElementById('muteBtn');
-const bgm = document.getElementById('bgm');
 
 let current = -1;
 let spinning = false;
 let heartInterval = null;
 
-// ====== BGM helpers ======
-function setupBgm(){
-  if (!BGM_URL) return;
-  if (!bgm.src){ bgm.src = BGM_URL; }
-  bgm.volume = BGM_VOL;
-  bgm.loop = false; // we'll loop the segment manually
-  bgm.addEventListener('loadedmetadata', ()=>{
-    try { bgm.currentTime = Math.min(BGM_START, (bgm.duration||BGM_START)-0.1); } catch(e){}
-  });
-  bgm.addEventListener('timeupdate', ()=>{
-    if (bgm.currentTime >= BGM_END){
-      bgm.currentTime = BGM_START + 0.01;
-      bgm.play().catch(()=>{});
-    }
-  });
-}
-function playBgm(){
-  if (!BGM_URL) return;
-  setupBgm();
-  bgm.play().catch(()=>{});
-}
-let musicMuted = false;
-function toggleMute(){
-  if (!BGM_URL) return;
-  musicMuted = !musicMuted;
-  bgm.muted = musicMuted;
-  muteBtn.setAttribute('aria-pressed', String(musicMuted));
-  muteBtn.classList.toggle('active', musicMuted);
-  muteBtn.textContent = musicMuted ? "🔇 Music" : "🔊 Music";
-}
-
-// ====== FX audio (bleeps) ======
+// Audio (mobile-friendly)
 let actx = null;
-function ensureAudioCtx(){
+function ensureAudio(){
   if (!actx){
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (Ctx){ actx = new Ctx(); }
@@ -219,7 +176,7 @@ function ensureAudioCtx(){
   return actx;
 }
 function clickSound(){
-  const ctx = ensureAudioCtx(); if (!ctx) return;
+  const ctx = ensureAudio(); if (!ctx) return;
   const o = ctx.createOscillator(); const g = ctx.createGain();
   o.type = 'triangle'; o.frequency.value = 420;
   g.gain.value = 0.001; o.connect(g); g.connect(ctx.destination);
@@ -231,7 +188,7 @@ function clickSound(){
   o.stop(t+0.13);
 }
 function tickSound(){
-  const ctx = ensureAudioCtx(); if (!ctx) return;
+  const ctx = ensureAudio(); if (!ctx) return;
   const o = ctx.createOscillator(); const g = ctx.createGain();
   o.type = 'square'; o.frequency.value = 880;
   g.gain.value = 0.0008; o.connect(g); g.connect(ctx.destination);
@@ -242,7 +199,7 @@ function tickSound(){
   o.stop(t+0.09);
 }
 function winSound(){
-  const ctx = ensureAudioCtx(); if (!ctx) return;
+  const ctx = ensureAudio(); if (!ctx) return;
   const o1 = ctx.createOscillator(), o2 = ctx.createOscillator();
   const g = ctx.createGain(); g.gain.value = 0.002;
   o1.type='sine'; o2.type='sine'; o1.connect(g); o2.connect(g); g.connect(ctx.destination);
@@ -256,7 +213,7 @@ function winSound(){
   o1.stop(t+0.36); o2.stop(t+0.36);
 }
 
-// ====== UI helpers ======
+// UI
 function show(i, animate){
   current = i;
   display.src = PHOTOS[i];
@@ -309,7 +266,6 @@ function spin(){
   if (spinning) return;
   spinning = true;
   clickSound();
-  playBgm(); // start background music on first user spin
   spinBtn.disabled = true;
   emitHeartsStart();
   titleText.textContent = "Wait for it…";
@@ -359,7 +315,8 @@ function spin(){
       winSound();
       fireBlast();
       emitHeartsStop();
-      const word = ["Hot!", "Ohhh no!", "Fansextic!", "Exotic!", "Spicy!", "Saucy!", "Cheeky!", "Steamy!", "Wild!", "Yummy!"][Math.floor(Math.random()*10)];
+      // Show random funny word
+      const word = FUNNY[Math.floor(Math.random()*FUNNY.length)];
       reaction.textContent = word;
       reaction.classList.remove('show');
       void reaction.offsetWidth;
@@ -373,47 +330,23 @@ function spin(){
 }
 
 // Init
-const PHOTOS_DATA = [
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlelPq1MnQRrudLO_Om5pbh37IRGneS2WcC8pq8ngu5w&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEsFq4_xS7MEP9LSBz0XwYXQtQOe4vLaNJztVirA0_Q&s",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTK2gRcN39Tbi2SspzsIPSA0l6kAujkCjeBhltBlSLWA&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAnWtH7JyrABt492qToLsDyAqYWMCQiCPSpDwmBDtfLw&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWsRYDhJlDmP3L-niG8n52AgLfwS1BZWJ5JMbl4yUpBg&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hh_LiZwvT8ujeKffuX4g0N23v4qyRYU9Hbc0gvH-tg&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7QYw6vPc2sdSYAL5a9POmfYxlaACIxnkSM6y9WKmt0g&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBDPRgL1YfBSWFJSR9o8J0UU8i6EgKueMQI1ugbzw1Ag&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAKANGe5Oyfo3Y8L3klKG6PVBAVTGC6hOzVhTEWLJcUQ&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ-666QIo6VkbJFFxPv_ZgT103wGk3bx5YyCY-vmoNpA&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnrnaGo7Lbi9dJufeZsWiGlRCfRyCWnD3crkR4pdT_Aw&s",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzEa0302dL1rk48nKzds9XpSQPNaYLhFJbxLvep9FLw&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiY6eUFo7uTWRD7OpXNZTw2-r_mgK9OGxwHGngykgpDQ&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSf41wuNGeORcuOJ4bGR3vNx3002HuGd4GOCsYzrozw&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcHdTTNYIQrrmnGBG-6_aj_rFYSvN4MeZ9AZkHx6Ghtg&s=10",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOadkdb31_at6swnlVpCvl-c11SoUpyj9OsZBroEV1dw&s=10",
-];
-
 function init(){
-  const photos = PHOTOS.length ? PHOTOS : PHOTOS_DATA;
-  countEl.textContent = photos.length;
-  photos.forEach((src, i)=>{
+  countEl.textContent = PHOTOS.length;
+  PHOTOS.forEach((src, i)=>{
     const t = new Image();
     t.src = src; t.alt = 'photo '+(i+1);
-    t.addEventListener('click', ()=> { if (!spinning) { display.src = src; } });
+    t.addEventListener('click', ()=> { if (!spinning) show(i, true); });
     thumbs.appendChild(t);
   });
-  document.body.dataset.photosLoaded = "1";
-  if (photos.length) { display.src = photos[0]; }
-  setupBgm();
+  show(0, false);
 }
-document.addEventListener('DOMContentLoaded', init);
-spinBtn.addEventListener('click', ()=>{ ensureAudioCtx(); spin(); });
+spinBtn.addEventListener('click', ()=>{ ensureAudio(); spin(); });
 startBtn.addEventListener('click', ()=>{
-  ensureAudioCtx();
-  playBgm();
+  ensureAudio();
   intro.classList.add('fade-out');
   setTimeout(()=>{ intro.style.display='none'; }, 360);
 });
-muteBtn.addEventListener('click', toggleMute);
+init();
 </script>
 </body>
 </html>

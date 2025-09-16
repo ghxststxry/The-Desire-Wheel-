@@ -14,6 +14,7 @@
     --text:#f4f4f7;
     --muted:#cfcfd6;
     --line:rgba(255,255,255,.10);
+    --frame: clamp(340px, 92vw, 440px); /* static square frame tuned for iPhone 16 Pro */
   }
   html,body{height:100%}
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -39,8 +40,12 @@
 
   .stage{ position:relative; display:grid; grid-template-rows: 1fr auto auto; min-height:58vh; background:#121214; overflow:hidden; }
   .viewer{ position:relative; z-index:1; display:grid; place-items:center; padding:12px; }
-  #display{ max-width:94%; max-height:58vh; border-radius:14px; object-fit:contain;
+  .frame{ width: var(--frame); height: var(--frame); /* static, square */
+    background:#0b0b0d; border-radius:14px; border:1px solid var(--line);
+    display:grid; place-items:center;
     box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset; }
+  #display{ width:100%; height:100%; object-fit:contain; border-radius:12px; }
+
   .thumbs{ z-index:1; display:grid; grid-auto-flow:column; grid-auto-columns:80px; gap:8px; overflow-x:auto; padding:8px 10px; border-top:1px solid var(--line); background:#111114 }
   .thumbs img{ width:100%; height:60px; object-fit:cover; border-radius:10px; border:1px solid var(--line); cursor:pointer; }
   .slot{ z-index:1; position:relative; display:grid; place-items:center; padding:12px; border-top:1px solid var(--line); background:rgba(255,255,255,.02); }
@@ -100,9 +105,9 @@
       <div class="intro-card">
         <h1>The Desire Wheel 🔥</h1>
         <p>
-          A hot, funny gamble with ideas-as-photos. Spin to reveal the next spark.
-          Remember: sometimes <em>one's position in society</em> makes all the difference —
-          but here, the wheel treats every idea like royalty. 😉
+          Hot, funny, and a tiny bit cheeky. Spin to reveal your next idea.
+          Out there, one’s position in society might change outcomes —
+          in here, the wheel gives every idea its moment to shine. 😉
         </p>
         <div class="cta">
           <button class="start" id="startBtn">Begin</button>
@@ -112,7 +117,9 @@
 
     <section class="stage">
       <div class="viewer">
-        <img id="display" alt="current" />
+        <div class="frame">
+          <img id="display" alt="current" />
+        </div>
         <div class="flash" id="flash"></div>
         <div class="fire" id="fire"></div>
       </div>
@@ -223,7 +230,6 @@ function emitHeartsStop(){
 function fireBlast(){
   fireLayer.innerHTML = '';
   const N = 36;
-  const rect = display.getBoundingClientRect();
   for(let i=0;i<N;i++){
     const ember = document.createElement('span');
     ember.className = 'ember';
@@ -239,7 +245,7 @@ function fireBlast(){
   }
 }
 
-// Spin logic with precise ~5s duration
+// Spin logic: ~5s total, random subset of frames
 function spin(){
   if (spinning) return;
   spinning = true;
@@ -253,30 +259,38 @@ function spin(){
   let target = Math.floor(Math.random()*total);
   if (total > 1 && target === current) target = (target + 1) % total;
 
-  const revolutions = 4; // base loops
-  const offset = ((target - current - 1 + total) % total) + 1;
-  const steps = revolutions*total + offset;
+  // Show only a subset of frames while spinning
+  const SUBSET_STEPS = 12 + Math.floor(Math.random()*6); // 12-17 frames
+  const sequence = [];
+  let last = current;
+  for(let k=0;k<SUBSET_STEPS-1;k++){
+    let i;
+    do { i = Math.floor(Math.random()*total); } while(total>1 && i===last);
+    sequence.push(i); last = i;
+  }
+  sequence.push(target); // ensure final frame is the target
 
-  // Build delays that sum to TARGET ms
-  const TARGET = 5000; // 5 seconds
-  const minInterval = 35, maxInterval = 260;
+  // Build eased delays summing to 5000ms
+  const TARGET = 5000;
+  const minInterval = 60, maxInterval = 420;
   function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
   const delays = [];
-  for(let k=1;k<=steps;k++){
-    const t = k/steps;
+  for(let k=1;k<=sequence.length;k++){
+    const t = k/sequence.length;
     delays.push(minInterval + (maxInterval - minInterval)*easeOut(t));
   }
   const sum = delays.reduce((a,b)=>a+b,0);
   const scale = TARGET / sum;
   for(let i=0;i<delays.length;i++) delays[i] *= scale;
 
-  let k = 0;
+  let step = 0;
   function advance(){
-    const i = (current + 1) % total;
+    const i = sequence[step];
     show(i, false);
     tickSound();
-    if (k < steps-1){
-      setTimeout(advance, delays[k++]);
+    step++;
+    if (step < sequence.length){
+      setTimeout(advance, delays[step-1]);
     } else {
       // Land
       show(target, true);
@@ -290,7 +304,7 @@ function spin(){
       spinBtn.disabled = false;
     }
   }
-  setTimeout(advance, delays[k++]);
+  setTimeout(advance, delays[0]);
 }
 
 // Init
